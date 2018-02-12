@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * created by pengmingguo on 2/9/18
  */
 @Entity
-@Table(name = "data_resource")
+@Table(name = "t_data_resource")
 @Getter
 @Setter
 public class DataResource extends ManyToOrganization {

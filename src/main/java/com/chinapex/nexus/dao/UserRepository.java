@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     User findByName(String name);
 
-    @Query("select u from user u where u.parent = ?1")
+    @Query(value = "select u from t_user u where u.parent = ?1",nativeQuery = true)
     Set<User> findChildren(Integer parent);
 
     User findByEmail(String email);

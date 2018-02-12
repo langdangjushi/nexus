@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
  * created by pengmingguo on 2/8/18
  */
 @Entity
-@Table(name = "channel",
+@Table(name = "t_channel",
         uniqueConstraints = @UniqueConstraint(columnNames = {"name"})
 )
 @Getter

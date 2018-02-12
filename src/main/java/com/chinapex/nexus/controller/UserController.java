@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.chinapex.nexus.util.HttpResponseCode.USER_ALREADY_EXIST;
+import static com.chinapex.nexus.util.HttpStatus.USER_ALREADY_EXIST;
 import static com.chinapex.nexus.util.TokenUtil.getToken;
 
 /**

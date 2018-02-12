@@ -12,7 +12,7 @@ import javax.persistence.Table;
  * created by pengmingguo on 2/9/18
  */
 @Entity
-@Table(name = "web_module", indexes = @Index(name = "name_index", columnList = "name", unique = true))
+@Table(name = "t_web_module", indexes = @Index(name = "name_index", columnList = "name", unique = true))
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

@@ -13,7 +13,7 @@ import java.util.Set;
  * created by pengmingguo on 2/8/18
  */
 @Entity
-@Table(name = "user",
+@Table(name = "t_user",
         indexes = {@Index(name = "name_index", columnList = "name", unique = true),
                 @Index(name = "email_index", columnList = "email", unique = true)})
 @Getter

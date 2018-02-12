@@ -13,7 +13,7 @@ import java.util.Objects;
  * created by pengmingguo on 2/9/18
  */
 @Entity
-@Table(name = "data_resource_type",
+@Table(name = "t_data_resource_type",
         uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 @Getter
 @Setter

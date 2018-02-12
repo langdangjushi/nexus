@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * created by pengmingguo on 2/9/18
  */
 @Entity
-@Table(name = "audience")
+@Table(name = "t_audience")
 @Data
 public class Audience extends ManyToOrganization{
 }

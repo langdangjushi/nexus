@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * created by pengmingguo on 2/8/18
  */
 @Entity
-@Table(name = "label")
+@Table(name = "t_label")
 @Getter
 @Setter
 public class Label extends ManyToOrganization {
