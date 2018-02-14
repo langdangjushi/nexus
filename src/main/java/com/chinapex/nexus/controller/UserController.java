@@ -1,10 +1,12 @@
 package com.chinapex.nexus.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.chinapex.nexus.dao.UserRepository;
 import com.chinapex.nexus.dao.WebModuleRepositoy;
 import com.chinapex.nexus.dto.*;
 import com.chinapex.nexus.model.User;
 import com.chinapex.nexus.model.UserPrivilege;
+import com.chinapex.nexus.util.MailUtil;
 import com.chinapex.nexus.util.Msg;
 import com.chinapex.nexus.util.TokenUtil;
 import org.apache.commons.codec.digest.Md5Crypt;
@@ -93,8 +95,24 @@ public class UserController {
     } else {
       old.setUpdatedTime(new Date());
     }
+    User user = old;
+    List<UserPrivilege> privileges =
+        request
+            .getPrivilege()
+            .stream()
+            .map(
+                e -> {
+                  UserPrivilege privilege = new UserPrivilege();
+                  privilege.setUser(user);
+                  privilege.setAction(e.getAction());
+                  privilege.setWebModule(wmRepo.findOne(e.getId()));
+                  return privilege;
+                })
+            .collect(Collectors.toList());
+    old.setPrivileges(privileges);
     userRepo.save(old);
-    return null;
+    MailUtil.sendInviteMail(user.getEmail(), "NEXUS账号激活", user.getName(), "");
+    return Msg.ok();
   }
 
   /**
@@ -105,8 +123,27 @@ public class UserController {
    */
   @GetMapping("user/delete/{userId}")
   public Msg deleteUser(@PathVariable Integer userId) {
+    LoginToken token = TokenUtil.getToken();
+    User user = userRepo.findOne(userId);
+    if (!isChild(user, token.getUserName()))
+      return Msg.err().data("You are not parent of " + user.getName());
     userRepo.delete(userId);
     return Msg.ok();
+  }
+
+  @PostMapping("user/status")
+  public Msg setUserStatus(@RequestBody JSONObject object) {
+    LoginToken token = TokenUtil.getToken();
+    User user = userRepo.findOne(object.getInteger("userId"));
+    if (!isChild(user, token.getUserName()))
+      return Msg.err().data("You are not parent of " + user.getName());
+    user.setStatus(object.getInteger("status"));
+    userRepo.save(user);
+    return Msg.ok();
+  }
+
+  private boolean isChild(User user, String parentName) {
+    return parentName.equals(user.getParent().getName());
   }
 
   /**
@@ -119,6 +156,7 @@ public class UserController {
   @PostMapping("user/invite")
   public Msg activateUser(
       @RequestBody @NotNull ActivateUserRequest request, HttpServletResponse response) {
+
     logger.info("user self activation user={}, email={}", request.getName(), request.getEmail());
     // 该用户名已经被占用
     boolean userNameExist = userRepo.existsByName(request.getName());
@@ -190,7 +228,7 @@ public class UserController {
     return Msg.ok().data(userConfigDto);
   }
 
-  @PostMapping("user/config")
+  @PostMapping("user/config/1")
   public Msg configUser(@RequestBody UserConfigRequest config) {
     LoginToken token = TokenUtil.getToken();
     User user = userRepo.findOne(config.getUserId());
@@ -210,5 +248,12 @@ public class UserController {
     user.setPrivileges(privileges);
     userRepo.save(user);
     return Msg.ok();
+  }
+
+  @GetMapping("user/email/{email}")
+  public Msg getUserByEmail(@PathVariable @NotNull String email) {
+    User user = userRepo.findByEmail(email);
+    if (user == null) return Msg.err().data("user not exits");
+    else return Msg.ok();
   }
 }

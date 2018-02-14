@@ -1,12 +1,10 @@
 package com.chinapex.nexus.dto;
 
-import com.chinapex.nexus.model.User;
-import lombok.Data;
-import org.hibernate.validator.constraints.URL;
-
+import java.util.Set;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
-import java.util.Set;
+import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 
 /**
  * created by pengmingguo on 2/9/18
@@ -22,5 +20,5 @@ public class InviteUserRequest {
     @URL
     private String sendUrl;
 
-    private Set<Integer> privilege;
+    private Set<UserPrivilegeDto> privilege;
 }

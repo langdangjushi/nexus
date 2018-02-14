@@ -1,6 +1,7 @@
 package com.chinapex.nexus.controller;
 
 import com.chinapex.nexus.dao.OrganizationRepository;
+import com.chinapex.nexus.dto.EventAndGroupDto;
 import com.chinapex.nexus.dto.EventAssociationResponse;
 import com.chinapex.nexus.dto.EventDto;
 import com.chinapex.nexus.dto.LoginToken;
@@ -8,6 +9,8 @@ import com.chinapex.nexus.model.EventGroup;
 import com.chinapex.nexus.model.Organization;
 import com.chinapex.nexus.util.Msg;
 import com.chinapex.nexus.util.TokenUtil;
+import java.util.LinkedList;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +38,8 @@ public class EventController {
     LoginToken token = TokenUtil.getToken();
     Organization org = orgRepo.findByName(token.getOrgName());
     Collection<EventGroup> eventGroups = org.getEventGroups();
+    if (CollectionUtils.isEmpty(eventGroups))
+      return Msg.ok().data(new LinkedList<EventAssociationResponse>());
     List<EventAssociationResponse> result =
         eventGroups
             .stream()
@@ -63,6 +68,15 @@ public class EventController {
     return Msg.ok().data(result);
   }
 
-  //    @GetMapping("eventmanage/groupandevent")
-  //    public
+  @GetMapping("eventmanage/groupandevent")
+  public Msg groupAndEvent() {
+    LoginToken token = TokenUtil.getToken();
+    Organization org = orgRepo.findByName(token.getOrgName());
+    Collection<EventGroup> eventGroups = org.getEventGroups();
+    if (CollectionUtils.isEmpty(eventGroups)) return Msg.ok().data(new EventAndGroupDto());
+//    eventGroups.stream().map(g -> {
+//      g.getEvents()
+//    })
+    return null;
+  }
 }
