@@ -28,7 +28,7 @@ public class Event extends ManyToOrganization{
     @ManyToMany(mappedBy = "events")
     private Collection<EventGroup> groups;
 
-    @OneToOne(fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JoinColumn(name = "config_id")
     private Config config;
 

@@ -32,25 +32,26 @@ public class Organization extends BaseModel {
     @Column(name = "prism_token")
     private String prismToken;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
     private Collection<Label> labels;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
     private Collection<DataResource> dataResources;
 
     @OneToMany(mappedBy = "organization")
     private Collection<Channel> channels;
 
-    @OneToMany(mappedBy = "organization")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "t_org_data_resource_type", joinColumns = @JoinColumn(name = "org_id"), inverseJoinColumns = @JoinColumn(name = "data_resource_type_id"))
     private Collection<DataResourceType> dataResourceTypes;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
     private Collection<User> users;
 
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<EventGroup> eventGroups;
 
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Event> events;
 
 

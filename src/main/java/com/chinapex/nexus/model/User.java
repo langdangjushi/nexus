@@ -52,7 +52,6 @@ public class User extends ManyToOrganization {
     @Column(columnDefinition = "TINYINT")
     private Integer status;
 
-    @ManyToMany
-    @JoinTable(name = "user_privilege", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "web_module_id"))
-    private Collection<WebModule> webModules;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Collection<UserPrivilege> privileges;
 }

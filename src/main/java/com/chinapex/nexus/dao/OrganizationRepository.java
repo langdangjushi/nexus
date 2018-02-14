@@ -5,13 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * created by pengmingguo on 2/8/18
- */
+/** created by pengmingguo on 2/8/18 */
 @Repository
-public interface OrganizationRepository extends CrudRepository<Organization,Integer>{
+public interface OrganizationRepository extends CrudRepository<Organization, Integer> {
 
-    Organization findByName(String name);
+  Organization findByName(String name);
 
-    boolean existsByName(String name);
+  boolean existsByName(String name);
 }

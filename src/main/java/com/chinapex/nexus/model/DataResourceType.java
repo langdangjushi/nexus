@@ -3,10 +3,9 @@ package com.chinapex.nexus.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -17,13 +16,14 @@ import java.util.Objects;
         uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 @Getter
 @Setter
-public class DataResourceType extends ManyToOrganization {
+public class DataResourceType extends BaseModel {
     private static final long serialVersionUID = 2983431492292910689L;
 
     @NotNull
     private String name;
 
-
+    @Column(name = "group_name")
+    private String groupName;
 
     @Override
     public boolean equals(Object o) {
