@@ -1,12 +1,15 @@
 package com.chinapex.nexus.model;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.Collection;
 
 /** created by pengmingguo on 2/11/18 */
 @Entity
@@ -27,7 +30,16 @@ public class EventGroup extends ManyToOrganization {
     joinColumns = @JoinColumn(name = "event_group_id"),
     inverseJoinColumns = @JoinColumn(name = "event_id")
   )
-  private Collection<Event> events = Collections.emptySet();
+  private Collection<Event> events;
+
+
+  @Override
+  public String toString() {
+    return "EventGroup{" +
+        "name='" + name + '\'' +
+        ", id=" + id +
+        '}';
+  }
 
   @Override
   public boolean equals(Object o) {

@@ -28,12 +28,12 @@ public class Config {
 
   private String value;
 
-  @ManyToOne
+  @ManyToOne(fetch=FetchType.EAGER)
   @JoinColumn(name = "parent_id")
   private Config parent;
 
   @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Collection<Config> children = Collections.emptySet();
+  private Collection<Config> children;
 
   ///////////////////////////////////////
   //  util method          /////////////
@@ -61,6 +61,16 @@ public class Config {
 
   private List<Config> findConfig(String key) {
     return children.stream().filter(e -> key.equals(e.name)).collect(Collectors.toList());
+  }
+
+  @Override
+  public String toString() {
+    return "Config{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", value='" + value + '\'' +
+        ", children=" + children +
+        '}';
   }
 
   @Override

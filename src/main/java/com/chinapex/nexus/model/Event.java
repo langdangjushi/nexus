@@ -27,11 +27,20 @@ public class Event extends ManyToOrganization{
     private Boolean selected;
 
     @ManyToMany(mappedBy = "events")
-    private Collection<EventGroup> groups = Collections.emptySet();
+    private Collection<EventGroup> groups;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JoinColumn(name = "config_id")
     private Config config;
+
+    @Override
+    public String toString() {
+        return "Event{" +
+            "name='" + name + '\'' +
+            ", type='" + type + '\'' +
+            ", config=" + config +
+            '}';
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -15,4 +15,5 @@ import javax.persistence.Table;
 @Setter
 public class Label extends ManyToOrganization {
     private static final long serialVersionUID = -8433027354646728235L;
+    private String name;
 }

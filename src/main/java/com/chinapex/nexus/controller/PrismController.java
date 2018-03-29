@@ -36,7 +36,7 @@ public class PrismController {
         LoginToken token = TokenUtil.getToken();
         Organization org = orgRepo.findByName(token.getOrgName());
         List<PrismProject> projects = null;
-        String prismToken = TokenUtil.prismToken(org.getPrismToken());
+        String prismToken = org.getPrismToken();
         try {
             projects = prismSrv
                     .projects(prismToken)
@@ -63,7 +63,7 @@ public class PrismController {
                                     // triggers
                                     List<PrismTrigger> triggers = null;
                                     try {
-                                        List<PrismBaseDto> body = prismSrv.triggers(prismToken).execute().body();
+                                        List<PrismBaseDto> body = prismSrv.triggers(prismToken,p.getPk(),c.getPk()).execute().body();
                                         triggers = body.stream().map(t -> {
                                             PrismTrigger trigger = new PrismTrigger();
                                             trigger.setTriggerId(t.getRule_number());

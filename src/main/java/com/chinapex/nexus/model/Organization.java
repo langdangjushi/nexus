@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.validator.constraints.Length;
 
 /** created by pengmingguo on 2/8/18 */
@@ -35,13 +36,13 @@ public class Organization extends BaseModel {
   private String prismToken;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
-  private Collection<Label> labels = Collections.emptySet();
+  private Collection<Label> labels ;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
   private Collection<DataResource> dataResources = Collections.emptySet();
 
   @OneToMany(mappedBy = "organization")
-  private Collection<Channel> channels = Collections.emptySet();
+  private Collection<Channel> channels ;
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
@@ -49,16 +50,16 @@ public class Organization extends BaseModel {
     joinColumns = @JoinColumn(name = "org_id"),
     inverseJoinColumns = @JoinColumn(name = "data_resource_type_id")
   )
-  private Collection<DataResourceType> dataResourceTypes = Collections.emptySet();
+  private Collection<DataResourceType> dataResourceTypes ;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
-  private Collection<User> users = Collections.emptySet();
+  private Collection<User> users ;
 
   @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Collection<EventGroup> eventGroups = Collections.emptySet();
+  private Collection<EventGroup> eventGroups ;
 
   @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Collection<Event> events = Collections.emptySet();
+  private Collection<Event> events ;
 
   public void addEvent(Event event) {
     if (this.events.size() == 0) this.events = new HashSet<>();
@@ -67,9 +68,22 @@ public class Organization extends BaseModel {
   }
 
   public void addEventGroup(EventGroup eventGroup) {
-    if (eventGroups.size() == 0) eventGroups = new HashSet<>();
+    if (CollectionUtils.isEmpty(this.eventGroups)) eventGroups = new HashSet<>();
     eventGroup.setOrganization(this);
     this.eventGroups.add(eventGroup);
+  }
+
+  public void addLabel(Label obj) {
+    if(CollectionUtils.isEmpty(this.labels)) this.labels = new HashSet<>();
+    this.labels.add(obj);
+  }
+
+  @Override
+  public String toString() {
+    return "Organization{" +
+        "name='" + name + '\'' +
+        ", prismToken='" + prismToken + '\'' +
+        '}';
   }
 
   @Override
@@ -89,4 +103,5 @@ public class Organization extends BaseModel {
 
     return Objects.hash(name);
   }
+
 }

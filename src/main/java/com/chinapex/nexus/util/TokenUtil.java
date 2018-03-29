@@ -69,8 +69,4 @@ public class TokenUtil {
     token.setSign(DigestUtils.md5Hex(checkStr));
     return Base64.getEncoder().encodeToString(JSON.toJSONString(token).getBytes());
   }
-
-  public static String prismToken(String prismToken) {
-    return PrismHttpService.TOKEN_PREFIX + prismToken;
-  }
 }

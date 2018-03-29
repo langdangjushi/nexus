@@ -1,10 +1,8 @@
 package com.chinapex.nexus.dto;
 
-import com.chinapex.nexus.model.Event;
+import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Collection;
 
 /**
  * created by pengmingguo on 2/11/18
@@ -17,6 +15,6 @@ public class EventAssociationResponse {
 
     private String groupName;
 
-    private Collection<EventDto> eventDtos;
+    private Collection<EventDto> events;
 
 }
