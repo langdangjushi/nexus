@@ -64,7 +64,7 @@ public class UserController {
                 })
             .collect(Collectors.toList());
 
-    return Msg.err().data(new PageImpl<>(members));
+    return Msg.ok().data(new PageImpl<>(members));
   }
 
   /**
@@ -109,6 +109,9 @@ public class UserController {
                 })
             .collect(Collectors.toList());
     old.setPrivileges(privileges);
+    if (parent.getChildren() == null) parent.setChildren(new LinkedList<>());
+    parent.getChildren().add(old);
+
     userRepo.save(old);
     MailUtil.sendInviteMail(user.getEmail(), "NEXUS账号激活", user.getName(), "");
     return Msg.ok();
@@ -168,7 +171,7 @@ public class UserController {
     user.setStatus(User.ACTIVATED);
 
     String tokenStr = TokenUtil.createTokenStr(user);
-    response.setHeader(TokenUtil.TOKEN_NAME, tokenStr);
+    response.setHeader(TokenUtil.TOKEN_NAME_TO, tokenStr);
 
     userRepo.save(user);
     return Msg.ok();
@@ -254,5 +257,24 @@ public class UserController {
     User user = userRepo.findByEmail(email);
     if (user == null) return Msg.err().data("user not exits");
     else return Msg.ok();
+  }
+
+  @GetMapping("user/privilege")
+  public Msg listPrivilege() {
+    LoginToken token = TokenUtil.getToken();
+    User user = userRepo.findByName(token.getUserName());
+    Collection<UserPrivilege> privileges = user.getPrivileges();
+    Collection<PrivilegeResponse> privilegeResponses = new LinkedList<>();
+    if (privileges != null) {
+      privileges.forEach(
+          p -> {
+            PrivilegeResponse v = new PrivilegeResponse();
+            v.setAction(p.getAction());
+            v.setName(p.getWebModule().getName());
+            v.setResourceId(p.getWebModule().getId());
+            privilegeResponses.add(v);
+          });
+    }
+    return Msg.ok().data(privilegeResponses);
   }
 }

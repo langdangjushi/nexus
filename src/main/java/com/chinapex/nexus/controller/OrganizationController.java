@@ -2,18 +2,24 @@ package com.chinapex.nexus.controller;
 
 import com.chinapex.nexus.dao.OrganizationRepository;
 import com.chinapex.nexus.dao.UserRepository;
+import com.chinapex.nexus.dao.WebModuleRepositoy;
 import com.chinapex.nexus.dto.CreateOrganizationRequest;
 import com.chinapex.nexus.dto.CreateOrganizationResponse;
 import com.chinapex.nexus.dto.LoginRequest;
 import com.chinapex.nexus.model.Organization;
 import com.chinapex.nexus.model.User;
+import com.chinapex.nexus.model.UserPrivilege;
 import com.chinapex.nexus.service.OrganizationService;
 import com.chinapex.nexus.util.Msg;
 import com.chinapex.nexus.util.TokenUtil;
+import java.util.HashMap;
+import java.util.LinkedList;
+import javax.validation.Valid;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +36,7 @@ import java.util.regex.Pattern;
 @RestController
 @RequestMapping("/api/v1/users")
 public class OrganizationController {
-    private static Logger logger = LoggerFactory.getLogger(Organization.class);
+    private static Logger logger = LoggerFactory.getLogger(OrganizationController.class);
 
     @Autowired
     private OrganizationService orgSrv;
@@ -41,9 +47,12 @@ public class OrganizationController {
     @Autowired
     private UserRepository userRepo;
 
+    @Autowired
+    private WebModuleRepositoy webRepo;
+
     @PostMapping("createUser")
     @Transactional
-    public CreateOrganizationResponse createOrganization(@RequestBody CreateOrganizationRequest request) {
+    public CreateOrganizationResponse createOrganization(@Valid @RequestBody CreateOrganizationRequest request) {
         logger.info("create organization and related user {}", request);
         // organization to lower case
         String normalized = request.getOrgName().toLowerCase();
@@ -63,7 +72,15 @@ public class OrganizationController {
         user.setRole(User.ADMIN);
         user.setStatus(User.ACTIVATED);
         user.setPassword(request.getPassword());
-
+        LinkedList<UserPrivilege> userPrivileges = new LinkedList<>();
+        webRepo.findAll().iterator().forEachRemaining(w ->{
+            UserPrivilege p = new UserPrivilege();
+            p.setUser(user);
+            p.setAction(UserPrivilege.RW);
+            p.setWebModule(w);
+            userPrivileges.add(p);
+        });
+        user.setPrivileges(userPrivileges);
         userRepo.save(user);
 
         return new CreateOrganizationResponse(true, "create organization success");
@@ -91,7 +108,10 @@ public class OrganizationController {
         String password = Md5Crypt.md5Crypt(request.getPassword().getBytes(), salt);
         if (!user.getPassword().equals(password))
             return Msg.err().data("password error");
-        response.setHeader(TokenUtil.TOKEN_NAME, TokenUtil.createTokenStr(user));
-        return Msg.ok();
+        response.setHeader(TokenUtil.TOKEN_NAME_TO, TokenUtil.createTokenStr(user));
+        HashMap data = new HashMap();
+        data.put("ret","OK");
+        data.put("reason",null);
+        return Msg.ok().data(data);
     }
 }

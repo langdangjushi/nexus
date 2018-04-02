@@ -1,5 +1,6 @@
 package com.chinapex.nexus.dto;
 
+import java.util.Map;
 import lombok.Data;
 
 /**
@@ -12,5 +13,6 @@ public class LoginToken {
     private String userName;
     private Long createTime;
     private String sign;
+    private Map<String,Object> authInfo;
 
 }

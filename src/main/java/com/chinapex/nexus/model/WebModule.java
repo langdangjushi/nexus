@@ -1,5 +1,7 @@
 package com.chinapex.nexus.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +17,10 @@ import javax.persistence.Table;
 @Table(name = "t_web_module", indexes = @Index(name = "name_index", columnList = "name", unique = true))
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
-public class WebModule extends BaseModel {
+public class WebModule {
+
+    @Id
+    private Integer id;
 
     private String name;
 

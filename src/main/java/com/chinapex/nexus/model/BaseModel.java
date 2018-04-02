@@ -45,5 +45,6 @@ abstract class BaseModel implements Serializable {
     @PrePersist
     void createTime() {
         this.createdTime = new Date();
+        this.updatedTime = createdTime;
     }
 }

@@ -19,6 +19,10 @@ public class UserPrivilege implements Serializable{
 
   private static final long serialVersionUID = 1645876716135315208L;
 
+  public static int READ  =  0b1;
+  public static int WRITE = 0b10;
+  public static int RW    = 0b11;
+
   @Id
   @ManyToOne
   private User user;

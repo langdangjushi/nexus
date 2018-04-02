@@ -4,6 +4,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
 
 /**
  * created by pengmingguo on 2/11/18
@@ -18,6 +19,6 @@ public class FastJsonConverter {
     @Bean
     public HttpMessageConverters fastJson() {
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-        return new HttpMessageConverters(converter);
+        return new HttpMessageConverters((HttpMessageConverter<?>)converter);
     }
 }
