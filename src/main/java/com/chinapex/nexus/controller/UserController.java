@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +65,8 @@ public class UserController {
                 })
             .collect(Collectors.toList());
 
-    return Msg.ok().data(new PageImpl<>(members));
+    PageRequest page = new PageRequest(0, members.size());
+    return Msg.ok().data(new PageImpl<>(members,page,members.size()));
   }
 
   /**
