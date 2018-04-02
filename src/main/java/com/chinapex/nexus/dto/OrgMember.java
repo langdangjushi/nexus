@@ -1,5 +1,6 @@
 package com.chinapex.nexus.dto;
 
+import java.util.Date;
 import lombok.Data;
 
 /**
@@ -12,6 +13,6 @@ public class OrgMember {
     private Integer userId;
     private String role;
     private Integer status;
-    private String createdTime;
-    private String updatedTime;
+    private Date createdTime;
+    private Date updatedTime;
 }

@@ -47,7 +47,6 @@ public class UserController {
     // add parent self
     children.add(parent);
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     List<OrgMember> members =
         children
             .stream()
@@ -57,8 +56,8 @@ public class UserController {
                   m.setUserId(u.getId());
                   m.setUserName(u.getName());
                   m.setEmail(u.getEmail());
-                  m.setCreatedTime(sdf.format(u.getCreatedTime()));
-                  m.setUpdatedTime(sdf.format(u.getUpdatedTime()));
+                  m.setCreatedTime(u.getCreatedTime());
+                  m.setUpdatedTime(u.getUpdatedTime());
                   m.setRole(u.getRole());
                   m.setStatus(u.getStatus());
                   return m;
